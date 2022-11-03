@@ -25,5 +25,3 @@ $ sh ./run_tests.sh
 ```
 Running script under the root priviliges is neccesary because the ping-bot using pmutils library, which raises the ExceptionError on
 process_iter() function when checking the connection to the database if it does not run under the sudo.
-
--- jjisolo
