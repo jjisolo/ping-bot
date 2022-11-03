@@ -5,6 +5,21 @@ __pycache__/
 # C extensions
 *.so
 
+# Vim swap files
+tests/*.swp
+tests/*.swo
+tests/*.swn
+docs/*.swp
+docs/*.swo
+docs/*.swn
+telegram/*.swp
+telegram/*.swo
+telegram/*.swn
+./*.swp
+./*.swo
+./*.swn
+
+
 # Distribution / packaging
 .Python
 env/
