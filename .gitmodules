@@ -1,3 +1,3 @@
-[submodule "submodules"]
-	path = submodules
+[submodule "dtek-selelium-parser"]
+	path = dtek-selelium-parser
 	url = https://github.com/jjisolo/dtek-selelium-parser
