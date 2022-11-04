@@ -83,9 +83,9 @@ class ping_bot_database_manager(object):
             return 
 
         else:
-            self.__cursor.execute("INSERT INTO 'telegram-users' ('chat_id') VALUES (?)", (chat_id,))
-
             dev_logger.info(log_meta["database-insert"].format("telegram-users", "chat_id", chat_id))
+
+            self.__cursor.execute("INSERT INTO 'telegram-users' ('chat_id') VALUES (?)", (chat_id,))
 
             return self.__connection.commit()
 
@@ -93,9 +93,9 @@ class ping_bot_database_manager(object):
         """
         static_cast<column::id>(column::chat_id);
         """
-        result = self.__cursor.execute("SELECT `id` FROM `telegram-users` WHERE `chat_id` = ?", (user_id, ))
-
         dev_logger.info(log_meta["database-get"].format("telegram-users", "id"))
+
+        result = self.__cursor.execute("SELECT `id` FROM `telegram-users` WHERE `chat_id` = ?", (user_id, ))
 
         return result.fetchone[0]
     
@@ -103,19 +103,19 @@ class ping_bot_database_manager(object):
         """
         static_cast<column::chat_id>(column::id);
         """
-        result = self.__cursor.execute("SELECT `chat_id` FROM `telegram-users` WHERE `id` = ?", (chat_id, ))
-
         dev_logger.info(log_meta["database-get"].format("telegram-users", "id"))
 
+        result = self.__cursor.execute("SELECT `chat_id` FROM `telegram-users` WHERE `id` = ?", (chat_id, ))
+        
         return result.fetchone[0]
         
     def contains(self, chat_id: typing.Union[str, int]) -> bool:
         """
         Check if chat_id is already in database. True if contains, False if not.
         """
-        result = self.__cursor.execute("SELECT `id` FROM `telegram-users` WHERE `chat_id` = ?", (chat_id,))
-
         dev_logger.info(log_meta["database-get"].format("telegram-users", "id"))
+
+        result = self.__cursor.execute("SELECT `id` FROM `telegram-users` WHERE `chat_id` = ?", (chat_id,))
 
         return bool(len(result.fetchall()))
 
