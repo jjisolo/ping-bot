@@ -1,4 +1,7 @@
 {
 	"send_to": "Send message to [id: {}] ",
-	"start-action":  "Request form action from [id: {}] "
+	"start-action":  "Request form action from [id: {}] ",
+	"database-insert": "Request to add new database record [table: {} column: {} value: {}]",
+	"database-get": "Request to get record [table: {} column: {}]",
+	"database-non-distinct-add": "Request to add already existing record [table: {} column: {} value: {}]"
 }
