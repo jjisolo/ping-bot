@@ -4,15 +4,22 @@ import sqlite3, psutil, typing, os, warnings
 
 class ping_bot_database_manager(object):
     """
-    Base database manager class, that aggregates
-    different methods for working with sqlite3 database.
+    Description:
+        Base database manager class, that aggregates
+        different methods for working with sqlite3 database.
+
     """
 
     def __init__(self, database_filename : str) -> None:
         """
-        Establish connection to the database.
+        Description:
+            Initialize the database object. Try to establish
+            connection with the database.
 
-        :param databse_filename(str): filename of the database.
+        Args:
+            database_filename: filename of the database
+
+        Returns: None
         """
         dev_logger.debug(("Initializing sqlite3 database"))
         
@@ -27,11 +34,15 @@ class ping_bot_database_manager(object):
         
         self.__cursor = self.__connection.cursor()
     
-    @classmethod # For Unit-Testing.
+    @classmethod # NOTE: Used for unit-testing to call the function without create an object instance.
     def __assert_file_exists__(cls, database_filename) -> None:
         """
-        Check if the requested file exists, if not report an error
-        to the dev logging pipe.
+        Description:
+            Assert that the database file exists. If not report an error
+            to the /logs/deb_log.log file.
+
+        Returns: None
+
         """
         result = os.path.exists(database_filename)
 
@@ -40,11 +51,14 @@ class ping_bot_database_manager(object):
         else:
             dev_logger.debug("Performed database file existing check.")
     
-    @classmethod # For Unit-Testing.
+    @classmethod # NOTE: Used for unit-testing to call the function without create an object instance.
     def __assert_connection_established__(cls, database_filename: str) -> None:
         """
         Check if *something* is connected to the database, if not
         report an error to the dev logging pipe.
+
+        FIXME: Try another algorithm/library whatever. Currently the program must run from root
+        *only* because of call to the /dev/proc in psutil.process_iter()
         """
         for procedure in psutil.process_iter():
             try:
@@ -61,22 +75,36 @@ class ping_bot_database_manager(object):
     @property
     def connection(self) -> sqlite3.Connection:
         """
-        Database connection getter.
+        Description:
+            Database connection getter.
+
+        Returns: (sqlite3.Connection) class instance.
         """
         return self.__connection
         
     @property
     def cursor(self) -> sqlite3.Cursor:
         """
-        Databse cursor getter.
+        Description:
+            sqlite3 cursor getter.
+
+        Returns: (sqlite3.Cursor) class instance.
+
         """
         return self.__cursor
 
     def add_user(self, chat_id: typing.Union[str, int]) -> None:
         """
-        Add user id to the database
-        """
+        Description:
+            Add new `char_id`(add new user) to the database. If the
+            user is not distinct then do nothing.
 
+        Args:
+            chat_id: telegram chat id of the user.
+
+        Returns: None
+
+        """
         if self.contains(chat_id): 
             dev_logger.warning(log_meta["database-non-distinct-add"].format("telegram-users", "chat_id", chat_id))
 
@@ -89,9 +117,28 @@ class ping_bot_database_manager(object):
 
             return self.__connection.commit()
 
+    def add_ip(self, chat_id: typing.Union[str, int]) -> None:
+        """
+        Description:
+            add `tracked_ip` record to the `telegram-users` database.
+
+        Args:
+            chat_id: telegram chat id of the user.
+
+        Returns: None
+
+        """
+        pass
+
     def __convert_from_telegram_id__(self, user_id : typing.Union[str, int]) -> str:
         """
-        static_cast<column::id>(column::chat_id);
+        Description:
+            get database id from chat_id.
+        Args:
+            user_id: telegram chat id of the user.
+
+        Returns: (str) id database record.
+
         """
         dev_logger.info(log_meta["database-get"].format("telegram-users", "id"))
 
@@ -99,19 +146,32 @@ class ping_bot_database_manager(object):
 
         return result.fetchone[0]
     
-    def __convert_from_id__(self, chat_id : typing.Union[str, int]) -> str:
+    def __convert_from_id__(self, user_id : typing.Union[str, int]) -> str:
         """
-        static_cast<column::chat_id>(column::id);
+        Description:
+            get database id from chat_id.
+        Args:
+            user_id: database id of the user.
+
+        Returns: (str) chat_id database record.
+
         """
         dev_logger.info(log_meta["database-get"].format("telegram-users", "id"))
 
-        result = self.__cursor.execute("SELECT `chat_id` FROM `telegram-users` WHERE `id` = ?", (chat_id, ))
+        result = self.__cursor.execute("SELECT `chat_id` FROM `telegram-users` WHERE `id` = ?", (user_id, ))
         
         return result.fetchone[0]
         
     def contains(self, chat_id: typing.Union[str, int]) -> bool:
         """
-        Check if chat_id is already in database. True if contains, False if not.
+        Description:
+            check if user already exists id the database.
+
+        Args:
+            chat_id: telegram chat id of the user.
+
+        Returns: (bool) Result of the request.
+
         """
         dev_logger.info(log_meta["database-get"].format("telegram-users", "id"))
 
