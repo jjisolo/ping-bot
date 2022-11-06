@@ -120,7 +120,7 @@ class ping_bot_database_manager(object):
     def add_ip(self, chat_id: typing.Union[str, int], ip_address: str) -> None:
         """
         Description:
-            add `tracked_ip` record to the `telegram-users` database.
+            add `ip-adress` record to the `data-chain` table.
 
         Args:
             chat_id: telegram chat id of the user.
@@ -134,6 +134,30 @@ class ping_bot_database_manager(object):
         self.__cursor.execute(
             "INSERT INTO 'data-chain' ('chat_id', 'ip-address') VALUES (?, ?)",
             (self.__convert_from_telegram_id__(chat_id), ip_address)
+        )
+
+        return self.__connection.commit()
+
+
+    def get_ip(self, chat_id: typing.Union[str, int]) -> typing.Tuple[str]:
+
+    def remove_ip(self, chat_id: typing.Union[str, int], ip_address: str) -> None:
+        """
+        Description:
+            remove `ip-adress` record to the `data-chain` table.
+
+        Args:
+            chat_id: telegram chat id of the user.
+            ip_address: ip-address to start track.
+
+        Returns: None
+
+        """
+        dev_logger.info(log_meta["database-delete"].format("data-chain", "ip-address", ip_address))
+
+        self.__cursor.execute(
+            "DELETE FROM `data-chain` WHERE `chat_id` = ? AND `ip-address` = '"+ip_address+"'",
+            (self.__convert_from_telegram_id__(chat_id), )
         )
 
         return self.__connection.commit()
