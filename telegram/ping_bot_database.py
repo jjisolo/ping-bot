@@ -117,18 +117,27 @@ class ping_bot_database_manager(object):
 
             return self.__connection.commit()
 
-    def add_ip(self, chat_id: typing.Union[str, int]) -> None:
+    def add_ip(self, chat_id: typing.Union[str, int], ip_address: str) -> None:
         """
         Description:
             add `tracked_ip` record to the `telegram-users` database.
 
         Args:
             chat_id: telegram chat id of the user.
+            ip_address: ip-address to start track.
 
         Returns: None
 
         """
-        pass
+        dev_logger.info(log_meta["database-insert"].format("data-chain", "ip-address", ip_address))
+
+        self.__cursor.execute(
+            "INSERT INTO 'data-chain' ('chat_id', 'ip-address') VALUES (?, ?)",
+            (self.__convert_from_telegram_id__(chat_id), ip_address)
+        )
+
+        return self.__connection.commit()
+
 
     def __convert_from_telegram_id__(self, user_id : typing.Union[str, int]) -> str:
         """
@@ -144,7 +153,7 @@ class ping_bot_database_manager(object):
 
         result = self.__cursor.execute("SELECT `id` FROM `telegram-users` WHERE `chat_id` = ?", (user_id, ))
 
-        return result.fetchone[0]
+        return result.fetchone()[0]
     
     def __convert_from_id__(self, user_id : typing.Union[str, int]) -> str:
         """
@@ -160,7 +169,7 @@ class ping_bot_database_manager(object):
 
         result = self.__cursor.execute("SELECT `chat_id` FROM `telegram-users` WHERE `id` = ?", (user_id, ))
         
-        return result.fetchone[0]
+        return result.fetchone()[0]
         
     def contains(self, chat_id: typing.Union[str, int]) -> bool:
         """

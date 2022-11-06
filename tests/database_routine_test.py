@@ -46,3 +46,11 @@ class Test_database_io_assertation_control:
          # verify that databse process adding succesfully
          database_class = ping_bot_database_manager(DATABASE_DUMP)
          database_class.add_user("1288")
+
+     def test_database_ioctl_add_ip(self) -> None:
+         # Call ping_bot_database_manager::add_user() to
+         # verify that databse process adding succesfully
+         database_class = ping_bot_database_manager(DATABASE_DUMP)
+         database_class.add_user("1288")
+         database_class.add_ip("1288", "128.168.0.0.1")
+
