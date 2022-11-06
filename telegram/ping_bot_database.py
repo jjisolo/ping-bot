@@ -120,7 +120,7 @@ class ping_bot_database_manager(object):
 
             return self.__connection.commit()
 
-    def add_ip(self, chat_id: typing.Union[str, int], ip_address: str, exist_ok : str = True) -> None:
+    def add_ip(self, chat_id: typing.Union[str, int], ip_address: str, exist_ok: bool = True) -> None:
         """
         Description:
             add `ip-adress` record to the `data-chain` table.
