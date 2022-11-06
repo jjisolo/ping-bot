@@ -68,7 +68,7 @@ class ping_bot_database_manager(object):
                         if database_filename in file.path:
                             return
             except psutil.NoSuchProcess as error:
-                commit_critical_error("Expirienced psutil error:", error)
+                commit_critical_error("Experienced psutil error: {}".format(error))
 
         commit_critical_error("No connection to the database has been established.")
 
@@ -137,7 +137,6 @@ class ping_bot_database_manager(object):
         )
 
         return self.__connection.commit()
-
 
     def get_ip(self, chat_id: typing.Union[str, int]) -> typing.List[str]:
         """
