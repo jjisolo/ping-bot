@@ -212,3 +212,10 @@ class ping_bot_database_manager(object):
 
         return bool(len(result.fetchall()))
 
+
+    def disconnect(self) -> None:
+        """
+        Description:
+            close the connection to the database.
+        """
+        self.__connection.close()
