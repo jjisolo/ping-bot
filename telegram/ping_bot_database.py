@@ -139,7 +139,22 @@ class ping_bot_database_manager(object):
         return self.__connection.commit()
 
 
-    def get_ip(self, chat_id: typing.Union[str, int]) -> typing.Tuple[str]:
+    def get_ip(self, chat_id: typing.Union[str, int]) -> typing.List[str]:
+        """
+        Description:
+            get all tracked ip's if user
+
+        Args:
+            chat_id: telegram chat id of the user.
+
+        Returns: List tracked ip addresses of the user.
+        """
+        result = self.__cursor.execute(
+            "SELECT * FROM 'data-chain' WHERE `chat_id` = ?",
+            (self.__convert_from_telegram_id__(chat_id), )
+        )
+
+        return result.fetchall()
 
     def remove_ip(self, chat_id: typing.Union[str, int], ip_address: str) -> None:
         """
@@ -161,7 +176,6 @@ class ping_bot_database_manager(object):
         )
 
         return self.__connection.commit()
-
 
     def __convert_from_telegram_id__(self, user_id : typing.Union[str, int]) -> str:
         """
@@ -211,7 +225,6 @@ class ping_bot_database_manager(object):
         result = self.__cursor.execute("SELECT `id` FROM `telegram-users` WHERE `chat_id` = ?", (chat_id,))
 
         return bool(len(result.fetchall()))
-
 
     def disconnect(self) -> None:
         """
