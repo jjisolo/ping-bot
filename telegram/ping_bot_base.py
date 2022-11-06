@@ -7,6 +7,9 @@ import os, aiogram, logging, json, warnings
 
 WARNING_CRITICAL_HIT = "The program experienced critical error. Consider seeing log/dev_log.log to identify the error."
 
+DEV_LOGGER_LOG_FILE_PATH = "logs/dev-logs.log"
+USR_LOGGER_LOG_FILE_PATH = "logs/usr-logs.log"
+
 logging.basicConfig(
         format="%(asctime)s,%(msecs)d %(name)s %(levelname)s %(message)s",
         datefmt='%H:%M:%S'
@@ -18,10 +21,10 @@ usr_logger = logging.getLogger("UsrLogger")
 dev_logger.setLevel(logging.DEBUG)
 usr_logger.setLevel(logging.INFO)
 
-dev_fh = logging.FileHandler("logs/dev-logs.log")
+dev_fh = logging.FileHandler(DEV_LOGGER_LOG_FILE_PATH)
 dev_fh.setLevel(logging.DEBUG)
 
-usr_fh  = logging.FileHandler("logs/usr-logs.log")
+usr_fh  = logging.FileHandler(USR_LOGGER_LOG_FILE_PATH)
 dev_fh.setLevel(logging.INFO)
 
 dev_logger.addHandler(dev_fh)
