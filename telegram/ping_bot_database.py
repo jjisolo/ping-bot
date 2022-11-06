@@ -113,11 +113,14 @@ class ping_bot_database_manager(object):
         else:
             dev_logger.info(log_meta["database-insert"].format("telegram-users", "chat_id", chat_id))
 
-            self.__cursor.execute("INSERT INTO 'telegram-users' ('chat_id') VALUES (?)", (chat_id,))
+            self.__cursor.execute(
+                "INSERT INTO 'telegram-users' ('chat_id') VALUES (?)",
+                (chat_id,)
+            )
 
             return self.__connection.commit()
 
-    def add_ip(self, chat_id: typing.Union[str, int], ip_address: str) -> None:
+    def add_ip(self, chat_id: typing.Union[str, int], ip_address: str, exist_ok : str =False) -> None:
         """
         Description:
             add `ip-adress` record to the `data-chain` table.
@@ -125,11 +128,16 @@ class ping_bot_database_manager(object):
         Args:
             chat_id: telegram chat id of the user.
             ip_address: ip-address to start track.
-
+            exist_ok: add only if the ip address is distinct
         Returns: None
 
         """
         dev_logger.info(log_meta["database-insert"].format("data-chain", "ip-address", ip_address))
+
+        # If the ip already linked to the user.
+        if exist_ok is False and bool(len(self.get_ip(chat_id))) is True:
+            dev_logger.warning(log_meta["database-non-distinct-add"].format("data-chain", "ip-address", chat_id))
+            return
 
         self.__cursor.execute(
             "INSERT INTO 'data-chain' ('chat_id', 'ip-address') VALUES (?, ?)",
@@ -188,7 +196,10 @@ class ping_bot_database_manager(object):
         """
         dev_logger.info(log_meta["database-get"].format("telegram-users", "id"))
 
-        result = self.__cursor.execute("SELECT `id` FROM `telegram-users` WHERE `chat_id` = ?", (user_id, ))
+        result = self.__cursor.execute(
+            "SELECT `id` FROM `telegram-users` WHERE `chat_id` = ?",
+            (user_id, )
+        )
 
         return result.fetchone()[0]
     
@@ -204,7 +215,10 @@ class ping_bot_database_manager(object):
         """
         dev_logger.info(log_meta["database-get"].format("telegram-users", "id"))
 
-        result = self.__cursor.execute("SELECT `chat_id` FROM `telegram-users` WHERE `id` = ?", (user_id, ))
+        result = self.__cursor.execute(
+            "SELECT `chat_id` FROM `telegram-users` WHERE `id` = ?",
+            (user_id, )
+        )
         
         return result.fetchone()[0]
         
@@ -221,7 +235,10 @@ class ping_bot_database_manager(object):
         """
         dev_logger.info(log_meta["database-get"].format("telegram-users", "id"))
 
-        result = self.__cursor.execute("SELECT `id` FROM `telegram-users` WHERE `chat_id` = ?", (chat_id,))
+        result = self.__cursor.execute(
+            "SELECT `id` FROM `telegram-users` WHERE `chat_id` = ?",
+            (chat_id,)
+        )
 
         return bool(len(result.fetchall()))
 
