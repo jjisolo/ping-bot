@@ -1,5 +1,5 @@
 from ping_bot_base import ping_dispatcher, ping_bot
-from handlers               import ping_bot_pm_handler
+from handlers      import ping_bot_pm_handler
 
 import asyncio, itertools, random
 
