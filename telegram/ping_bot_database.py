@@ -1,6 +1,6 @@
 from telegram.ping_bot_base import dev_logger, usr_logger, log_meta, commit_critical_error, WARNING_CRITICAL_HIT
 
-import sqlite3, psutil, typing, os, warnings
+import sqlite3, typing, os, warnings
 
 class ping_bot_database_manager(object):
     """
@@ -33,9 +33,8 @@ class ping_bot_database_manager(object):
         self.__assert_connection_established__(database_filename)
         
         self.__cursor = self.__connection.cursor()
-    
-    @classmethod # NOTE: Used for unit-testing to call the function without create an object instance.
-    def __assert_file_exists__(cls, database_filename) -> None:
+
+    def __assert_file_exists__(self, database_filename) -> None:
         """
         Description:
             Assert that the database file exists. If not report an error
@@ -50,27 +49,17 @@ class ping_bot_database_manager(object):
             commit_critical_error("Requested database file does not exist.")
         else:
             dev_logger.debug("Performed database file existing check.")
-    
-    @classmethod # NOTE: Used for unit-testing to call the function without create an object instance.
-    def __assert_connection_established__(cls, database_filename: str) -> None:
+
+    def __assert_connection_established__(self, database_filename: str) -> None:
         """
         Check if *something* is connected to the database, if not
         report an error to the dev logging pipe.
 
-        FIXME: Try another algorithm/library whatever. Currently the program must run from root
-        *only* because of call to the /dev/proc in psutil.process_iter()
         """
-        for procedure in psutil.process_iter():
-            try:
-                files = procedure.open_files()
-                if files:
-                    for file in files:
-                        if database_filename in file.path:
-                            return
-            except psutil.NoSuchProcess as error:
-                commit_critical_error("Experienced psutil error: {}".format(error))
-
-        commit_critical_error("No connection to the database has been established.")
+        try:
+            self.__connection.cursor()
+        except Exception as e:
+            commit_critical_error("No connection to the database has been established: {}".format(e))
 
     @property
     def connection(self) -> sqlite3.Connection:

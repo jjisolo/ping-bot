@@ -19,12 +19,14 @@ class Test_database_io_assertation_control:
         # with corrupted database filename(ex.: performs correct
         # file-does-exist-check.
         with pytest.raises(SystemExit):
-            ping_bot_database_manager.__assert_file_exists__(DATABASE_DUMP_CORRUPTED)
+            database_class = ping_bot_database_manager(DATABASE_DUMP_CORRUPTED)
+            database_class.__assert_file_exists__(DATABASE_DUMP_CORRUPTED)
 
     def test_database_ioctl_assert_dbfile_with_right_dbfile(self) -> None:
         # Now assert that the function works well with
         # correct database.
-        ping_bot_database_manager.__assert_file_exists__(DATABASE_NAME)
+        database_class = ping_bot_database_manager(DATABASE_DUMP)
+        database_class.__assert_file_exists__(DATABASE_DUMP)
 
     @pytest.mark.filterwarnings("ignore::RuntimeWarning")
     def test_database_ioctl_assert_connection(self) -> None:
@@ -33,7 +35,8 @@ class Test_database_io_assertation_control:
         # with corrupted database filename(ex.: performs correct
         # connection check.
         with pytest.raises(SystemExit):
-            ping_bot_database_manager.__assert_connection_established__(DATABASE_DUMP_CORRUPTED)
+            database_class = ping_bot_database_manager(DATABASE_DUMP_CORRUPTED)
+            database_class.__assert_connection_established__(DATABASE_DUMP_CORRUPTED)
 
     def test_database_ioctl_connects_succesfully(self) -> None:
         # Call ping_bot_database_manager::constructor to verify
