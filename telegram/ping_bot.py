@@ -1,13 +1,10 @@
-from ping_bot_base import ping_dispatcher, ping_bot
-from handlers      import ping_bot_pm_handler
-
-import asyncio, itertools, random
+import asyncio, ping_bot_base
 
 async def dispatcher_perform_polling() -> None:
     """
     Start polling of the bot dispatcher in async loop.
     """
-    await ping_dispatcher.start_polling()
+    await ping_bot_base.ping_dispatcher.start_polling()
 
 async def async_main() -> None:
     """
