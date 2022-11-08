@@ -1,8 +1,3 @@
-from aiogram                            import Bot, Dispatcher
-from aiogram.contrib.fsm_storage.memory import MemoryStorage
-from aiogram.dispatcher                 import FSMContext
-from aiogram.dispatcher.filters.state   import State, StatesGroup
-
 import os, aiogram, logging, json, warnings
 
 WARNING_CRITICAL_HIT = "The program experienced critical error. Consider seeing log/dev_log.log to identify the error."
